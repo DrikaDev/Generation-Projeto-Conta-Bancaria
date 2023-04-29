@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import conta.controller.ContaController;
 import conta.model.ContaCorrente;
 import conta.model.ContaPoupanca;
 import conta.util.Cores;
@@ -12,29 +13,29 @@ public class Menu {
 
 	public static void main(String[] args) {
 
+		ContaController contas = new ContaController();
+
 		Scanner leia = new Scanner(System.in);
-		int opcao;
+		int opcao, numero, agencia, tipo, aniversario;
+		String titular;
+		float saldo, limite;
+		
+		System.out.println("\nCriar Contas\n");
 
-		// Teste da Classe Conta Corrente
-		ContaCorrente cc1 = new ContaCorrente(1, 123, 1, "José da Silva", 0.0f);
-		cc1.visualizar();
-		cc1.sacar(12000.0f);
-		cc1.visualizar();
-		cc1.depositar(5000.0f);
-		cc1.visualizar();
+		ContaCorrente cc1 = new ContaCorrente(contas.gerarNumero(), 123, 1, "José da Silva", 1000, 150);
+		
+		ContaCorrente cc2 = new ContaCorrente(contas.gerarNumero(), 124, 1, "Adriana Gutierrez", 15000, 1500);
 
-		// Teste da Classe Conta Poupança
-		ContaPoupanca cp1 = new ContaPoupanca(2, 123, 2, "Maria dos Santos", 100000.0f, 15);
-		cp1.visualizar();
-		cp1.sacar(1000.0f);
-		cp1.visualizar();
-		cp1.depositar(5000.0f);
-		cp1.visualizar();
+		ContaPoupanca cp1 = new ContaPoupanca(contas.gerarNumero(), 125, 2, "Maria dos Santos", 4000, 120);
+		
+		ContaPoupanca cp2 = new ContaPoupanca(contas.gerarNumero(), 126, 2, "Nicolas G. Hanzen", 8000, 120);
 
+		contas.listarTodas();
+		
 		while (true) {
 
 			System.out.println(Cores.TEXT_YELLOW + Cores.ANSI_BLACK_BACKGROUND
-					+ "*****************************************************");
+					         + "*****************************************************");
 			System.out.println("                                                     ");
 			System.out.println("                BANCO DO BRAZIL COM Z                ");
 			System.out.println("                                                     ");
@@ -51,7 +52,7 @@ public class Menu {
 			System.out.println("            9 - Sair                                 ");
 			System.out.println("                                                     ");
 			System.out.println("*****************************************************");
-			System.out.println("Entre com a opção desejada:                          ");
+			System.out.println("     Entre com a opção desejada:                     ");
 			System.out.println("                                                     " + Cores.TEXT_RESET);
 
 			try {
@@ -71,36 +72,79 @@ public class Menu {
 			switch (opcao) {
 			case 1:
 				System.out.println(Cores.TEXT_WHITE + "Criar Conta\n\n");
+
+				System.out.println("Digite o número da agência: ");
+				agencia = leia.nextInt();
+				System.out.println("Digite o nome do titular: ");
+				/* O Método skip ignora a entrada que corresponde ao padrão especificado, 
+				ignorando os delimitadores. Em nosso projeto, estamos ignorando \r (quebra de linha), 
+				para permitir que o comando nextLine() leia palavras compostas. 
+				Lembre-se que o titular possui pelo menos nome e um sobrenome.*/
+				leia.skip("\\R?");
+				titular = leia.nextLine();
+
+				do {
+					System.out.println("Digite o tipo da conta (1-CC ou 2-CP): ");
+					tipo = leia.nextInt();
+
+				} while (tipo < 1 && tipo > 2);
+				
+				System.out.println("Digite o Saldo da Conta R$ ");
+				saldo = leia.nextFloat();
+
+				switch (tipo) {
+					case 1: {
+						System.out.println("Digite o Limite de Crédito R$ ");
+						limite = leia.nextFloat();
+						contas.cadastrar(new ContaCorrente(contas.gerarNumero(), agencia, tipo, titular, saldo, limite));
+					}
+
+					case 2: {
+						System.out.println("Digite o dia do Aniversario da Conta: ");
+						aniversario = leia.nextInt();
+						contas.cadastrar(new ContaPoupanca(contas.gerarNumero(), agencia, tipo, titular, saldo, aniversario));
+					}
+				}
+
 				keyPress();
 				break;
+				
 			case 2:
 				System.out.println(Cores.TEXT_WHITE + "Listar todas as Contas\n\n");
+				contas.listarTodas();
 				keyPress();
 				break;
+				
 			case 3:
 				System.out.println(Cores.TEXT_WHITE + "Consultar dados da Conta - por número\n\n");
 				keyPress();
 				break;
+				
 			case 4:
 				System.out.println(Cores.TEXT_WHITE + "Atualizar dados da Conta\n\n");
 				keyPress();
 				break;
+				
 			case 5:
 				System.out.println(Cores.TEXT_WHITE + "Apagar a Conta\n\n");
 				keyPress();
 				break;
+				
 			case 6:
 				System.out.println(Cores.TEXT_WHITE + "Saque\n\n");
 				keyPress();
 				break;
+				
 			case 7:
 				System.out.println(Cores.TEXT_WHITE + "Depósito\n\n");
 				keyPress();
 				break;
+				
 			case 8:
 				System.out.println(Cores.TEXT_WHITE + "Transferência entre Contas\n\n");
 				keyPress();
 				break;
+				
 			default:
 				System.out.println(Cores.TEXT_RED_BOLD + "\nOpção Inválida!\n" + Cores.TEXT_RESET);
 				keyPress();
