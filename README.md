@@ -1,6 +1,6 @@
-# Generation-Projeto-Conta-Bancaria
+# Generation-Projeto-Guia
 
-Projeto guiado para o aprendizado da linguagem de programação Java ☕ do bootcamp da Generation.
+Projeto guiado para o aprendizado da linguagem de programação Java ☕ do bootcamp da Generation onde foi construído um Menu Conta Bancaria onde o usuário pode interagir criando conta, listando, buscando, atualizando, apagando a conta, sacar, depositar e transferir valores entre contas.
 
 <h2> Linguagem utilizada: </h2>
 
